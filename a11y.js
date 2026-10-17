@@ -53,6 +53,8 @@ async function audit(name) {
 }
 
 await audit('home')
+await click('.menu-btn')
+await audit('home-menu-open')
 
 await go('join')
 await audit('join-1-details')

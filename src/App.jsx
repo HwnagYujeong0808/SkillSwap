@@ -2,7 +2,7 @@ import { Suspense, lazy, useEffect, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import {
   BookOpen, Users, Smile, Smartphone, Video, CookingPot, Sprout, Hammer, Sparkles, Music, Languages,
-  UserPlus, MessageCircle, CalendarCheck, Handshake, Camera, Star, ShieldCheck, Mic, Volume2, Hand, ChevronLeft, ChevronRight, Plus, Heart,
+  UserPlus, MessageCircle, CalendarCheck, Handshake, Camera, Star, ShieldCheck, Mic, Volume2, Hand, ChevronLeft, ChevronRight, Plus, Heart, Menu, X,
 } from 'lucide-react'
 import { AREAS, INTERESTS, LANGUAGES, MEET, PEOPLE, POSTS, PRIORITIES, SKILLS, STORIES, TIMES, check, heard, plain } from './core.js'
 import { findMatches, screen } from './ai.js'
@@ -13,6 +13,14 @@ const pageFromHash = () => location.hash.slice(1) || 'home'
 
 function App() {
   const [page, setPage] = useState(pageFromHash)
+  const [menuOpen, setMenuOpen] = useState(false) // the phone menu behind the ☰ button
+
+  useEffect(() => {
+    if (!menuOpen) return
+    const onKey = e => e.key === 'Escape' && setMenuOpen(false)
+    addEventListener('keydown', onKey)
+    return () => removeEventListener('keydown', onKey)
+  }, [menuOpen])
   const [profile, setProfile] = useState(null)
   const [chatWith, setChatWith] = useState('Margaret')
   const [threads, setThreads] = useState({})
@@ -21,7 +29,7 @@ function App() {
   const [stories, setStories] = useState(STORIES) // reviews left on Community also show on the home page
 
   useEffect(() => {
-    const onHash = () => { setPage(pageFromHash()); scrollTo(0, 0) }
+    const onHash = () => { setPage(pageFromHash()); setMenuOpen(false); scrollTo(0, 0) }
     addEventListener('hashchange', onHash)
     return () => removeEventListener('hashchange', onHash)
   }, [])
@@ -59,12 +67,18 @@ function App() {
   return (
     <>
       <header className="nav">
-        <div className="wrap nav-inner">
+        <div className={'wrap nav-inner' + (menuOpen ? ' open' : '')}>
           <a href="#" className="logo">Skill<span>Swap</span></a>
-          <nav className="nav-links">
+          {/* On narrow screens Join stays in the bar; the other pages live behind ☰ */}
+          <a href="#join" className="nav-join" aria-current={page === 'join' ? 'page' : undefined}>Join</a>
+          <button type="button" className="menu-btn" aria-expanded={menuOpen} aria-controls="site-menu"
+            aria-label={menuOpen ? 'Close menu' : 'Open menu'} onClick={() => setMenuOpen(o => !o)}>
+            {menuOpen ? <X size={26} /> : <Menu size={26} />}
+          </button>
+          <nav id="site-menu" className="nav-links" aria-label="Main">
             {NAV.map(n => {
               const id = n.toLowerCase()
-              return <a key={id} href={'#' + id} aria-current={page === id ? 'page' : undefined}>{n}</a>
+              return <a key={id} href={'#' + id} className={id === 'join' ? 'join-link' : undefined} aria-current={page === id ? 'page' : undefined} onClick={() => setMenuOpen(false)}>{n}</a>
             })}
           </nav>
         </div>

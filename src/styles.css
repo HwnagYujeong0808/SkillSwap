@@ -56,7 +56,21 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .nav-links a:hover { color: var(--ink); background: rgb(255 255 255 / .6); }
 .nav-links a[aria-current] { background: var(--mint); color: var(--green-dark); }
 /* On phones the menu wraps to two rows; a sticky header that tall would cover the page. */
-@media (max-width: 700px) { .nav { position: static; } .nav-inner { padding: 12px 16px; border-radius: 28px; } }
+/* Narrow screens: logo, a Join button and ☰ on one row; the other pages open as a list under it.
+   860px is where the five links stop fitting. */
+.menu-btn, .nav-join { display: none; }
+@media (max-width: 860px) {
+  .nav-inner { justify-content: flex-start; gap: 8px; padding: 8px 8px 8px 20px; min-height: 0; }
+  .nav-join { display: inline-flex; align-items: center; margin-left: auto; padding: 10px 22px; border-radius: 999px; background: var(--amber); color: var(--amber-ink); font-weight: 600; text-decoration: none; }
+  .nav-links .join-link { display: none; }
+  .nav-inner.open { border-radius: 28px; padding-bottom: 12px; }
+  .menu-btn { display: grid; place-items: center; width: 48px; height: 48px; border: 0; border-radius: 50%; background: rgb(255 255 255 / .6); color: var(--ink); cursor: pointer; }
+  .nav-links { display: none; flex-basis: 100%; flex-direction: column; gap: 4px; padding: 8px 12px 0 0; }
+  .nav-inner.open .nav-links { display: flex; }
+  .nav-links a { padding: 14px 16px; border-radius: 16px; font-size: 1.1rem; }
+}
+/* Phones: the header scrolls away instead of sticking, so it never covers what the person is tapping. */
+@media (max-width: 700px) { .nav { position: static; } }
 
 /* Buttons */
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 16px 32px; border: 1px solid transparent; border-radius: 999px; font-size: 1.1rem; font-weight: 600; text-decoration: none; cursor: pointer; transition: transform .15s, filter .15s; }
