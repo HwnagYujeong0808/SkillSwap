@@ -1,2 +1,7 @@
 node_modules
 dist
+# Python AI service (ai_service/) and the archive it arrived in
+.venv/
+__pycache__/
+.pytest_cache/
+*.zip

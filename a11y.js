@@ -43,7 +43,8 @@ async function audit(name) {
   }
   for (const width of [320, 650, 1024]) {
     await page.setViewport({ width, height: 844 })
-    const wide = await page.evaluate(() => [...document.querySelectorAll('body *')]
+    // Only a real sideways scroll counts; then name the elements causing it (clipped ones, like canvases, don't).
+    const wide = await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1 ? [] : [...document.querySelectorAll('body *')]
       .filter(el => el.getBoundingClientRect().right > innerWidth + 1)
       .slice(0, 3).map(el => el.tagName.toLowerCase() + (typeof el.className === 'string' && el.className ? '.' + el.className.split(' ')[0] : '')))
     if (wide.length) { problems++; console.log(`  [layout] sticks out of a ${width}px screen: ${wide.join(', ')}`) }

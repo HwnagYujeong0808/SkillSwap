@@ -6,18 +6,19 @@ export const SKILLS = [
 export const INTERESTS = ['Music', 'Nature', 'Books', 'Food', 'Travel', 'Tech', 'Crafts', 'Sport', 'Films', 'Faith']
 export const TIMES = ['Weekday mornings', 'Weekday afternoons', 'Evenings', 'Weekends']
 export const MEET = ['in-person', 'online', 'Either is fine']
-export const AREAS = ['Camden', 'Islington', 'Hackney', 'Westminster', 'Lambeth', 'Southwark']
-export const LANGUAGES = ['English', 'Spanish', 'Bengali', 'Polish', 'Urdu', 'Punjabi', 'Arabic', 'Portuguese', 'Turkish', 'Somali', 'Cantonese', 'Gujarati']
+// The AI service's service area (New York Capital Region); its travel and venue rules know these towns.
+export const AREAS = ['Albany', 'Troy', 'Schenectady', 'Saratoga Springs', 'Rural Rensselaer']
+export const LANGUAGES = ['English', 'Spanish', 'Mandarin', 'Cantonese', 'Hindi', 'Bengali', 'Arabic', 'Russian', 'Italian', 'Polish', 'Korean', 'Haitian Creole']
 export const PRIORITIES = { learn: '📚 Learn something', social: '💛 Be social', happy: '🌞 Be happy' }
 
 export const PEOPLE = [
-  { name: 'Margaret', emoji: '🧶', age: 72, area: 'Camden', teach: ['Knitting', 'Baking'], learn: ['Video calling', 'Smartphone basics'], interests: ['Crafts', 'Food', 'Books'], times: ['Weekday mornings', 'Weekday afternoons'] },
-  { name: 'Arthur', emoji: '🪵', age: 68, area: 'Islington', teach: ['Woodwork', 'DIY repairs', 'History'], learn: ['AI tools', 'Online banking'], interests: ['Crafts', 'Sport'], times: ['Weekday mornings', 'Weekends'] },
-  { name: 'Priya', emoji: '🌶️', age: 64, area: 'Camden', teach: ['Cooking', 'Gardening'], learn: ['Social media', 'Photography'], interests: ['Food', 'Nature', 'Travel'], times: ['Evenings', 'Weekends'] },
-  { name: 'George', emoji: '🎹', age: 75, area: 'Hackney', teach: ['Piano', 'Chess', 'History'], learn: ['Smartphone basics', 'Spanish'], interests: ['Music', 'Books', 'Films'], times: ['Weekday afternoons'] },
-  { name: 'Leo', emoji: '🎧', age: 22, area: 'Camden', teach: ['Video calling', 'Social media', 'Smartphone basics'], learn: ['Knitting', 'Cooking'], interests: ['Music', 'Crafts', 'Films'], times: ['Evenings', 'Weekends'] },
-  { name: 'Amira', emoji: '💻', age: 25, area: 'Islington', teach: ['AI tools', 'CV writing', 'Online banking'], learn: ['Woodwork', 'DIY repairs'], interests: ['Tech', 'Crafts'], times: ['Weekday afternoons', 'Weekends'] },
-  { name: 'Sam', emoji: '📸', age: 19, area: 'Hackney', teach: ['Social media', 'Photography', 'Spanish'], learn: ['Cooking', 'Budgeting'], interests: ['Food', 'Travel', 'Sport'], times: ['Evenings'] },
+  { name: 'Margaret', emoji: '🧶', age: 72, area: 'Troy', teach: ['Knitting', 'Baking'], learn: ['Video calling', 'Smartphone basics'], interests: ['Crafts', 'Food', 'Books'], times: ['Weekday mornings', 'Weekday afternoons'] },
+  { name: 'Arthur', emoji: '🪵', age: 68, area: 'Albany', teach: ['Woodwork', 'DIY repairs', 'History'], learn: ['AI tools', 'Online banking'], interests: ['Crafts', 'Sport'], times: ['Weekday mornings', 'Weekends'] },
+  { name: 'Priya', emoji: '🌶️', age: 64, area: 'Schenectady', teach: ['Cooking', 'Gardening'], learn: ['Social media', 'Photography'], interests: ['Food', 'Nature', 'Travel'], times: ['Evenings', 'Weekends'] },
+  { name: 'George', emoji: '🎹', age: 75, area: 'Saratoga Springs', teach: ['Piano', 'Chess', 'History'], learn: ['Smartphone basics', 'Spanish'], interests: ['Music', 'Books', 'Films'], times: ['Weekday afternoons'] },
+  { name: 'Leo', emoji: '🎧', age: 22, area: 'Troy', teach: ['Video calling', 'Social media', 'Smartphone basics'], learn: ['Knitting', 'Cooking'], interests: ['Music', 'Crafts', 'Films'], times: ['Evenings', 'Weekends'] },
+  { name: 'Amira', emoji: '💻', age: 25, area: 'Albany', teach: ['AI tools', 'CV writing', 'Online banking'], learn: ['Woodwork', 'DIY repairs'], interests: ['Tech', 'Crafts'], times: ['Weekday afternoons', 'Weekends'] },
+  { name: 'Sam', emoji: '📸', age: 19, area: 'Schenectady', teach: ['Social media', 'Photography', 'Spanish'], learn: ['Cooking', 'Budgeting'], interests: ['Food', 'Travel', 'Sport'], times: ['Evenings'] },
 ]
 
 export const POSTS = [
@@ -30,17 +31,19 @@ export const POSTS = [
 export const STORIES = [
   { id: 's1', name: 'Margaret', emoji: '🧶', role: 'Member', since: 'March 2026', rating: 5, quote: "I video-called my granddaughter in Toronto all by myself. Leo was so patient — and now he's knitting his own scarf!" },
   { id: 's2', name: 'Helen', emoji: '🪵', role: 'Family member', since: 'May 2026', rating: 5, quote: 'Dad used to dread his phone. Since meeting Amira he asks an AI for his woodwork measurements and texts me photos of every shelf.' },
-  { id: 's3', name: 'Leo', emoji: '🎧', role: 'Buddy', since: 'March 2026', rating: 5, quote: "I came to learn knitting and left with a friend. Margaret's stories about Camden in the sixties beat any podcast." },
+  { id: 's3', name: 'Leo', emoji: '🎧', role: 'Buddy', since: 'March 2026', rating: 5, quote: "I came to learn knitting and left with a friend. Margaret's stories about Troy in the sixties beat any podcast." },
   { id: 's4', name: 'Priya', emoji: '🌶️', role: 'Member', since: 'June 2026', rating: 5, quote: 'Sam cooked dal for the first time, and my chilli page now has 40 followers. We laugh every single week.' },
 ]
 
 const overlap =(a, b) => a.filter(x => b.includes(x))
 
+// Members (over 60) are only matched with Buddies (18–30), and the other way round.
 // Skills that complement each other count most; the "What matters most" picks double their weight.
 export function rank(me, people) {
   const skillW = me.priorities.includes('learn') ? 2 : 1
   const socialW = me.priorities.includes('social') ? 2 : 1
   return people
+    .filter(p => (p.age >= 60) !== (me.age >= 60))
     .map(p => {
       const theyTeach = overlap(p.teach, me.learn)
       const theyLearn = overlap(p.learn, me.teach)
@@ -49,7 +52,6 @@ export function rank(me, people) {
         + socialW * shared.length
         + overlap(p.times, me.times).length
         + (p.area === me.area ? 2 : 0)
-        + ((me.age >= 60) !== (p.age >= 60) ? 3 : 0)
       return { ...p, score, theyTeach, theyLearn, shared }
     })
     .sort((a, b) => b.score - a.score)

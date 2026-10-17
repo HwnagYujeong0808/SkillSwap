@@ -1,10 +1,11 @@
-import { useEffect, useRef, useState } from 'react'
+import { Suspense, lazy, useEffect, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import {
   BookOpen, Users, Smile, Smartphone, Video, CookingPot, Sprout, Hammer, Sparkles, Music, Languages,
-  UserPlus, MessageCircle, CalendarCheck, Handshake, Camera, Star, ShieldCheck, Mic, Volume2, Hand, ChevronLeft, ChevronRight,
+  UserPlus, MessageCircle, CalendarCheck, Handshake, Camera, Star, ShieldCheck, Mic, Volume2, Hand, ChevronLeft, ChevronRight, Plus, Heart,
 } from 'lucide-react'
-import { AREAS, INTERESTS, LANGUAGES, MEET, PEOPLE, POSTS, PRIORITIES, SKILLS, STORIES, TIMES, check, heard, plain, rank } from './core.js'
+import { AREAS, INTERESTS, LANGUAGES, MEET, PEOPLE, POSTS, PRIORITIES, SKILLS, STORIES, TIMES, check, heard, plain } from './core.js'
+import { findMatches, screen } from './ai.js'
 import './styles.css'
 
 const NAV = ['Join', 'Matches', 'Messages', 'Sessions', 'Community']
@@ -26,7 +27,19 @@ function App() {
   }, [])
 
   // Before sign-up, show the demo neighbours from the mockups.
-  const matches = profile ? rank(profile, PEOPLE).slice(0, 4) : PEOPLE.slice(0, 4)
+  const [found, setFound] = useState(null) // { source: 'ai' | 'local', matches } once matching finishes
+  const latest = useRef(0) // ignore an older matching request that finishes after a newer one
+
+  const saveProfile = p => {
+    setProfile(p)
+    setFound(null)
+    location.hash = 'matches'
+    const req = ++latest.current
+    findMatches(p).then(r => req === latest.current && setFound(r))
+  }
+
+  // Before sign-up (or while matching runs) Messages and Sessions show the demo neighbours.
+  const matches = found ? found.matches : PEOPLE.slice(0, 4)
 
   const say = (name, from, text) => setThreads(t => ({ ...t, [name]: [...(t[name] ?? []), { from, text }] }))
   const send = (person, text) => {
@@ -36,8 +49,8 @@ function App() {
 
   const pages = {
     home: <Home stories={stories} />,
-    join: <Join profile={profile} onSave={p => { setProfile(p); location.hash = 'matches' }} />,
-    matches: <Matches profile={profile} matches={matches} onMessage={name => { setChatWith(name); location.hash = 'messages' }} />,
+    join: <Join profile={profile} onSave={saveProfile} />,
+    matches: <Matches profile={profile} found={found} onMessage={name => { setChatWith(name); location.hash = 'messages' }} />,
     messages: <Messages people={matches} chatWith={chatWith} setChatWith={setChatWith} threads={threads} onSend={send} />,
     sessions: <Sessions people={matches} chatWith={chatWith} profile={profile} sessions={sessions} setSessions={setSessions} />,
     community: <Community profile={profile} posts={posts} setPosts={setPosts} stories={stories} setStories={setStories} />,
@@ -89,13 +102,97 @@ const STEPS = [
 ]
 const tone = i => (i % 2 ? 'amber' : 'green')
 
-const Feature = ({ icon: Icon, title, text }) => (
-  <div className="feature">
-    <div className="icon soft"><Icon size={24} strokeWidth={1.75} /></div>
-    <h3>{title}</h3>
-    <p>{text}</p>
-  </div>
+// Title only until hovered, focused or tapped, so the page stays light on text.
+// The description is always in the page for screen readers, and keeps its space so nothing jumps.
+function Feature({ icon: Icon, title, text }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <article className={'feature' + (open ? ' open' : '')} tabIndex={0} onClick={() => setOpen(o => !o)}>
+      <span className="feature-more" aria-hidden="true"><Plus size={20} /></span>
+      <div className="icon soft"><Icon size={24} strokeWidth={1.75} /></div>
+      <h3>{title}</h3>
+      <p className="feature-desc">{text}</p>
+    </article>
+  )
+}
+
+// The two groups. Matching only ever pairs a Member with a Buddy.
+const GROUPS = [
+  { id: 'member', label: 'Member', ages: 'Over 60', emoji: '👵', min: 60, max: 120, gives: ['Life stories', 'Cooking', 'Crafts', 'Trades'] },
+  { id: 'buddy', label: 'Buddy', ages: 'Aged 18–30', emoji: '🧑', min: 18, max: 30, gives: ['Phones & apps', 'Video calls', 'Social media', 'Languages'] },
+]
+
+function Generations() {
+  const [side, setSide] = useState(null) // which group's gifts are highlighted
+  const pick = id => setSide(s => (s === id ? null : id))
+  const caption = side === 'member' ? 'Members share life skills with Buddies →'
+    : side === 'buddy' ? '← Buddies share digital skills with Members'
+    : 'Tap a card to see what each group shares.'
+  return (
+    <section className="section gens">
+      <h2>Two groups, matched together</h2>
+      <p className="sub">Every Member is paired with a Buddy.</p>
+      <div className={'gens-stage' + (side ? ` show-${side}` : '')}>
+        <GroupCard g={GROUPS[0]} active={side === 'member'} onPick={pick} />
+        <div className="flow" aria-hidden="true">
+          <svg viewBox="0 0 200 120">
+            <defs>
+              <marker id="head-member" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 10 5 0 10z" fill="#2e6146" /></marker>
+              <marker id="head-buddy" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 10 5 0 10z" fill="#6b4000" /></marker>
+            </defs>
+            <path className="arc arc-member" d="M22 50 C 70 0, 130 0, 178 50" markerEnd="url(#head-member)" />
+            <path className="arc arc-buddy" d="M178 70 C 130 120, 70 120, 22 70" markerEnd="url(#head-buddy)" />
+          </svg>
+          <span className="flow-heart"><Heart size={22} fill="currentColor" /></span>
+        </div>
+        <GroupCard g={GROUPS[1]} active={side === 'buddy'} onPick={pick} />
+      </div>
+      <p className="gens-caption" aria-live="polite">{caption}</p>
+    </section>
+  )
+}
+
+const GroupCard = ({ g, active, onPick }) => (
+  <button type="button" className={`gen-card ${g.id}`} aria-pressed={active} onClick={() => onPick(g.id)}>
+    <span className="gen-avatar" aria-hidden="true">{g.emoji}</span>
+    <span className="gen-name">{g.label}</span>
+    <span className="gen-ages">{g.ages}</span>
+    <span className="gen-gives">{g.gives.map(x => <span className="chip-sm" key={x}>{x}</span>)}</span>
+  </button>
 )
+
+// Fades the "How it works" steps in one after another as they scroll into view.
+function useReveal() {
+  useEffect(() => {
+    const els = document.querySelectorAll('.reveal')
+    if (!('IntersectionObserver' in window)) return els.forEach(el => el.classList.add('in'))
+    const io = new IntersectionObserver(entries => {
+      entries.filter(e => e.isIntersecting).forEach((e, k) => {
+        e.target.style.transitionDelay = `${k * 150}ms` // steps that arrive together still appear one by one
+        e.target.classList.add('in')
+        io.unobserve(e.target)
+      })
+    }, { threshold: 0.3 })
+    els.forEach(el => io.observe(el))
+    return () => io.disconnect()
+  }, [])
+}
+
+const HeroGradient = lazy(() => import('./HeroGradient.jsx'))
+
+// The animated gradient only loads when the visitor hasn't asked for less motion and WebGL works;
+// otherwise the same colours show as a still CSS gradient.
+function HeroBackdrop() {
+  const [animate] = useState(() => {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return false
+    try { return !!document.createElement('canvas').getContext('webgl2') } catch { return false }
+  })
+  return (
+    <div className="hero-bg" aria-hidden="true">
+      {animate && <Suspense fallback={null}><HeroGradient /></Suspense>}
+    </div>
+  )
+}
 
 const Stars = ({ n }) => (
   <span className="stars-row" role="img" aria-label={`Rated ${n} out of 5`}>
@@ -152,8 +249,10 @@ const Section = ({ title, sub, children }) => (
 )
 
 function Home({ stories }) {
+  useReveal()
   return (
     <main className="wrap">
+      <HeroBackdrop />
       <section className="hero">
         <span className="badge">For over-60s and 18–30s</span>
         <h1>Every generation has something to <em className="teach">teach</em> &amp; <em className="learn">learn</em>.</h1>
@@ -164,10 +263,12 @@ function Home({ stories }) {
         </div>
       </section>
 
+      <Generations />
+
       <Section title="How it works" sub="Seven simple steps from hello to friendship.">
         <ol className="timeline">
           {STEPS.map(([Icon, title, text], i) => (
-            <li key={title}>
+            <li key={title} className="reveal">
               <span className={`icon ${tone(i)}`}><Icon size={24} /></span>
               <div>
                 <h3>{title}</h3>
@@ -176,13 +277,13 @@ function Home({ stories }) {
             </li>
           ))}
         </ol>
-        <p className="safety">
+        <p className="safety reveal">
           <ShieldCheck size={28} />
           Every message and post is checked for scams and unkind words — with real people reviewing anything flagged.
         </p>
       </Section>
 
-      <Section title="What matters most" sub="In this order — because learning together is how friendships start.">
+      <Section title="What matters most" sub="Hover over or tap a card to read more.">
         <div className="grid grid-3">
           {WHAT_MATTERS.map(([icon, title, text]) => <Feature key={title} icon={icon} title={title} text={text} />)}
         </div>
@@ -196,18 +297,6 @@ function Home({ stories }) {
               <h3>{title}</h3>
             </div>
           ))}
-        </div>
-        <div className="roles">
-          <div className="role">
-            <h3>Over 60? (Member)</h3>
-            <p><b>Teach:</b> life experience, cooking, crafts, history, trades.</p>
-            <p><b>Learn:</b> smartphones, video calls, online banking, AI tools.</p>
-          </div>
-          <div className="role">
-            <h3>Aged 18–30? (Buddy)</h3>
-            <p><b>Teach:</b> digital skills, apps, social media, languages.</p>
-            <p><b>Learn:</b> life skills, mentorship, practical know-how.</p>
-          </div>
         </div>
       </Section>
 
@@ -254,7 +343,7 @@ const Chips = ({ title, hint, options, value, onToggle, label = x => x }) => (
 
 const BLANK = {
   referrerName: '', referrerOrg: '', referrerPhone: '', reason: '',
-  name: '', age: 65, area: 'Camden', phone: '', callTime: '', town: '', language: '', access: '', consent: false,
+  group: 'member', name: '', age: 65, area: 'Albany', phone: '', callTime: '', town: '', language: '', access: '', consent: false,
   contactName: '', contactRelation: '', contactPhone: '',
   priorities: ['learn', 'social', 'happy'], teach: [], learn: [], interests: [], times: [], meet: 'Either is fine',
 }
@@ -289,6 +378,12 @@ function Join({ profile, onSave }) {
   const [mode, setMode] = useState('text')
   const set = (key, value) => setF(f => ({ ...f, [key]: value }))
   const bind = key => ({ value: f[key], onChange: e => set(key, e.target.value) })
+  const grp = GROUPS.find(g => g.id === f.group) ?? GROUPS[0]
+  // Switching group clears an age that no longer fits, so the age box asks again.
+  const pickGroup = id => {
+    const g = GROUPS.find(x => x.id === id)
+    setF(f => ({ ...f, group: id, age: f.age >= g.min && f.age <= g.max ? f.age : '' }))
+  }
   const value = q => (q.single ? [f[q.key]] : f[q.key])
   const pick = (q, v) => setF(f => ({ ...f, [q.key]: q.single ? v : f[q.key].includes(v) ? f[q.key].filter(x => x !== v) : [...f[q.key], v] }))
   const add = (q, found) => setF(f => ({ ...f, [q.key]: q.single ? found[0] : [...new Set([...f[q.key], ...found])] }))
@@ -346,8 +441,22 @@ function Join({ profile, onSave }) {
 
         <section className="card fields">
           <h2 className="full">About the person</h2>
+          <fieldset className="full group-pick">
+            <legend>Joining as</legend>
+            <div className="group-options">
+              {GROUPS.map(g => (
+                <label key={g.id} className={`group-option ${g.id}`}>
+                  <input type="radio" name="group" checked={f.group === g.id} onChange={() => pickGroup(g.id)} />
+                  <span className="group-emoji" aria-hidden="true">{g.emoji}</span>
+                  <span><b>{g.label}</b> <span className="meta">· {g.ages}</span></span>
+                </label>
+              ))}
+            </div>
+            <p className="hint">Members are always matched with Buddies, and Buddies with Members.</p>
+          </fieldset>
           <Field label="First name" {...bind('name')} required />
-          <Field label="Age" type="number" min="18" max="120" {...bind('age')} required />
+          <Field label="Age" type="number" min={grp.min} max={grp.max} {...bind('age')} required
+            title={`${grp.label}s are ${grp.ages.toLowerCase()}`} />
           <label className="field">Nearest area (for matching)
             <select className="input" value={f.area} onChange={e => set('area', e.target.value)}>
               {AREAS.map(a => <option key={a}>{a}</option>)}
@@ -493,7 +602,7 @@ function VoiceQuestions({ value, pick, add, ready, onFinish }) {
 
 /* ---------- Step 2: Matches ---------- */
 
-function Matches({ profile, matches, onMessage }) {
+function Matches({ profile, found, onMessage }) {
   if (!profile) {
     return (
       <Page eyebrow="Step 2 · Match" title="Your matches" lead="Tell us a little about yourself first and we'll find neighbours whose skills complement yours.">
@@ -503,32 +612,37 @@ function Matches({ profile, matches, onMessage }) {
   }
   return (
     <Page eyebrow="Step 2 · Match" title="Your matches" lead={`Hi ${profile.name}! These neighbours' skills complement yours.`}>
-      <div className="grid grid-2">
-        {matches.map(m => {
-          const reasons = [
-            ...m.theyTeach.map(s => `Can teach you ${s}`),
-            ...m.theyLearn.map(s => `Wants to learn your ${s}`),
-            ...m.shared.map(s => `Both into ${s}`),
-          ]
-          return (
-            <div className="card match" key={m.name}>
-              <div className="row">
-                <span className="avatar" aria-hidden="true">{m.emoji}</span>
-                <div>
-                  <h2>{m.name}, {m.age}</h2>
-                  <p className="hint">{m.area} · {m.age >= 60 ? 'Member' : 'Buddy'}</p>
+      {!found ? (
+        <p className="card loading" role="status"><Sparkles size={22} /> Finding your matches… this can take a few seconds.</p>
+      ) : (
+        <>
+          <p className="hint source">
+            {found.source === 'ai'
+              ? <><Sparkles size={16} /> Suggested by SkillSwap AI. A coordinator checks every match before you meet.</>
+              : 'Suggested by our quick matcher (the AI service isn’t connected right now).'}
+          </p>
+          <div className="grid grid-2">
+            {found.matches.map(m => (
+              <div className="card match" key={m.id}>
+                <div className="row">
+                  <span className="avatar" aria-hidden="true">{m.emoji}</span>
+                  <div>
+                    <h2>{m.name}</h2>
+                    <p className="hint">{m.role}{m.area ? ` · ${m.area}` : ''}</p>
+                  </div>
                 </div>
+                {m.explanation && <p className="why">{m.explanation}</p>}
+                <p><b>Teaches:</b> {m.teach.join(', ')}</p>
+                <p><b>Wants to learn:</b> {m.learn.join(', ')}</p>
+                <div className="tags">
+                  {(m.tags.length ? m.tags : ['A neighbour worth meeting']).map(r => <span className="tag" key={r}>{r}</span>)}
+                </div>
+                <button className="btn btn-green small" onClick={() => onMessage(m.name)}>Say hello</button>
               </div>
-              <p><b>Teaches:</b> {m.teach.join(', ')}</p>
-              <p><b>Wants to learn:</b> {m.learn.join(', ')}</p>
-              <div className="tags">
-                {(reasons.length ? reasons : ['A neighbour worth meeting']).map(r => <span className="tag" key={r}>{r}</span>)}
-              </div>
-              <button className="btn btn-green small" onClick={() => onMessage(m.name)}>Say hello</button>
-            </div>
-          )
-        })}
-      </div>
+            ))}
+          </div>
+        </>
+      )}
     </Page>
   )
 }
@@ -538,14 +652,17 @@ function Matches({ profile, matches, onMessage }) {
 function Messages({ people, chatWith, setChatWith, threads, onSend }) {
   const [text, setText] = useState('')
   const [warn, setWarn] = useState(null)
+  const [busy, setBusy] = useState(false) // while the safety check runs; stops a double send
   const person = people.find(p => p.name === chatWith) ?? people[0]
   const thread = threads[person.name] ?? []
 
-  const submit = e => {
+  const submit = async e => {
     e.preventDefault()
     const t = text.trim()
-    if (!t) return
-    const problem = check(t)
+    if (!t || busy) return
+    setBusy(true)
+    const problem = await screen(t)
+    setBusy(false)
     setWarn(problem)
     if (!problem) { onSend(person, t); setText('') }
   }
@@ -576,7 +693,7 @@ function Messages({ people, chatWith, setChatWith, threads, onSend }) {
           {warn && <p className="warn" role="alert">{warn}</p>}
           <form className="chat-form" onSubmit={submit}>
             <input className="input" placeholder="Write a message…" aria-label="Message" value={text} onChange={e => setText(e.target.value)} />
-            <button className="btn btn-green small">Send</button>
+            <button className="btn btn-green small" disabled={busy}>{busy ? 'Checking…' : 'Send'}</button>
           </form>
         </section>
       </div>
@@ -589,7 +706,7 @@ function Messages({ people, chatWith, setChatWith, threads, onSend }) {
 const when = s => new Date(`${s.date}T${s.time}`).toLocaleString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' })
 
 function Sessions({ people, chatWith, profile, sessions, setSessions }) {
-  const area = profile?.area ?? 'Camden'
+  const area = profile?.area ?? 'Albany'
   const venues = [`${area} Library – Community Room`, `${area} Community Centre – Café`, 'Video call']
   const [f, setF] = useState({
     with: people.some(p => p.name === chatWith) ? chatWith : people[0].name,
@@ -678,15 +795,18 @@ function Community({ profile, posts, setPosts, stories, setStories }) {
   const [text, setText] = useState('')
   const [photo, setPhoto] = useState(null)
   const [warn, setWarn] = useState(null)
+  const [busy, setBusy] = useState(false)
 
-  const submit = e => {
+  const submit = async e => {
     e.preventDefault()
     const t = text.trim()
-    if (!t) return
-    const problem = check(t)
+    if (!t || busy) return
+    setBusy(true)
+    const problem = await screen(t)
+    setBusy(false)
     setWarn(problem)
     if (problem) return
-    setPosts([{ id: Date.now(), who: profile?.name ?? 'You', emoji: '🙂', meta: 'Just now', text: t, photo, likes: 0 }, ...posts])
+    setPosts(ps => [{ id: Date.now(), who: profile?.name ?? 'You', emoji: '🙂', meta: 'Just now', text: t, photo, likes: 0 }, ...ps])
     setText('')
     setPhoto(null)
   }
@@ -704,7 +824,7 @@ function Community({ profile, posts, setPosts, stories, setStories }) {
             📷 {photo ? 'Change photo' : 'Add photo'}
             <input className="sr-only" type="file" accept="image/*" onChange={e => e.target.files[0] && setPhoto(URL.createObjectURL(e.target.files[0]))} />
           </label>
-          <button className="btn btn-green small">Post</button>
+          <button className="btn btn-green small" disabled={busy}>{busy ? 'Checking…' : 'Post'}</button>
         </div>
       </form>
 
@@ -737,16 +857,21 @@ const ROLES = ['Member', 'Buddy', 'Family member']
 function Reviews({ profile, stories, setStories }) {
   const [r, setR] = useState({ name: profile?.name ?? '', role: 'Member', rating: 0, text: '' })
   const [warn, setWarn] = useState(null)
+  const [busy, setBusy] = useState(false)
   const set = (key, value) => setR(r => ({ ...r, [key]: value }))
 
-  const submit = e => {
+  const submit = async e => {
     e.preventDefault()
-    const problem = check(r.text) ?? check(r.name)
+    if (busy) return
+    const sent = r // what was on screen when Post was pressed
+    setBusy(true)
+    const problem = check(sent.name) ?? await screen(sent.text)
+    setBusy(false)
     setWarn(problem)
     if (problem) return
-    const since = new Date().toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })
-    setStories(s => [{ id: Date.now(), name: r.name.trim(), emoji: '🙂', role: r.role, since, rating: r.rating, quote: r.text.trim() }, ...s])
-    setR({ ...r, rating: 0, text: '' })
+    const since = new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+    setStories(s => [{ id: Date.now(), name: sent.name.trim(), emoji: '🙂', role: sent.role, since, rating: sent.rating, quote: sent.text.trim() }, ...s])
+    setR(x => ({ ...x, rating: 0, text: '' }))
   }
 
   return (
@@ -777,7 +902,7 @@ function Reviews({ profile, stories, setStories }) {
         </div>
         <textarea className="input" rows="3" maxLength={400} placeholder="What changed for you?" aria-label="Your review" value={r.text} onChange={e => set('text', e.target.value)} required />
         {warn && <p className="warn" role="alert">{warn}</p>}
-        <button className="btn btn-green small">Post review</button>
+        <button className="btn btn-green small" disabled={busy}>{busy ? 'Checking…' : 'Post review'}</button>
       </form>
 
       <div className="grid grid-2 posts">

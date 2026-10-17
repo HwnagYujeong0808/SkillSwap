@@ -11,9 +11,12 @@
     "a11y": "vite build && node a11y.js"
   },
   "dependencies": {
+    "@react-three/fiber": "9.8.1",
+    "@shadergradient/react": "2.4.20",
     "lucide-react": "^1.59.0",
     "react": "^19.3.1",
-    "react-dom": "^19.3.1"
+    "react-dom": "^19.3.1",
+    "three": "0.186.1"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^6.1.2",

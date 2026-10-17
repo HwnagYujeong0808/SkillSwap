@@ -1,0 +1,12 @@
+fastapi>=0.110
+uvicorn[standard]>=0.29
+pydantic>=2.6
+numpy>=1.26
+torch>=2.2
+transformers>=4.44,<5
+sentence-transformers>=3,<6
+sentencepiece
+protobuf
+# tests
+pytest
+httpx

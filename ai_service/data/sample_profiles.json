@@ -1,0 +1,175 @@
+{
+  "_note": "SYNTHETIC test data based on the sample rows in the SkillSwap spec (Section 8). Not real people. Distributions are design assumptions, not population estimates.",
+  "profiles": [
+    {
+      "person_id": "oa_0001", "role": "older_adult", "first_name": "Margaret", "age_band": "70-74", "area": "Troy",
+      "teach_text": "Baking bread and pies from scratch; stretching a grocery budget into good home-cooked meals",
+      "learn_text": "Making video calls with my grandkids and sharing photos online",
+      "generativity_text": "I would hate for my mother's bread recipes to be lost",
+      "interests_text": "gardening, local history, church choir, baking",
+      "motives": {"understanding": 0.3, "social": 0.6, "values": 0.9, "career": 0.0, "protective": 0.4, "enhancement": 0.5},
+      "generativity": 0.85, "style": {"extraversion": 0.55, "openness": 0.75},
+      "loneliness": {"ucla3": 7, "djg_emotional": 2, "djg_social": 3}, "network_lsns6": 9, "wellbeing_who5": 48,
+      "format_pref": "one_on_one", "availability": ["tue_pm", "thu_am", "sat_am"], "transport": "needs_ride", "languages": ["en"]
+    },
+    {
+      "person_id": "oa_0002", "role": "older_adult", "first_name": "Walter", "age_band": "75-79", "area": "Rural Rensselaer",
+      "teach_text": "Fixing small engines and lawn mowers; basic carpentry and woodworking",
+      "learn_text": "Using a smartphone safely, including for banking and online forms",
+      "generativity_text": "My dad taught me to rebuild engines and nobody in the family wants to learn it",
+      "interests_text": "fishing, old cars, county fair, woodworking",
+      "motives": {"understanding": 0.4, "social": 0.4, "values": 0.8, "career": 0.0, "protective": 0.3, "enhancement": 0.4},
+      "generativity": 0.8, "style": {"extraversion": 0.4, "openness": 0.5},
+      "loneliness": {"ucla3": 6, "djg_emotional": 1, "djg_social": 2}, "network_lsns6": 11, "wellbeing_who5": 60,
+      "format_pref": "group", "availability": ["mon_pm", "wed_pm", "sat_am"], "transport": "drives", "languages": ["en"]
+    },
+    {
+      "person_id": "oa_0003", "role": "older_adult", "first_name": "Rosa", "age_band": "65-69", "area": "Schenectady",
+      "teach_text": "Puerto Rican cooking like pasteles and arroz con gandules; Spanish conversation",
+      "learn_text": "Navigating patient portals and setting up telehealth video visits",
+      "generativity_text": "I want young people to keep our family holiday traditions and recipes",
+      "interests_text": "salsa music, cooking, dominoes, church",
+      "motives": {"understanding": 0.3, "social": 0.8, "values": 0.8, "career": 0.0, "protective": 0.5, "enhancement": 0.4},
+      "generativity": 0.75, "style": {"extraversion": 0.7, "openness": 0.6},
+      "loneliness": {"ucla3": 8, "djg_emotional": 2, "djg_social": 2}, "network_lsns6": 7, "wellbeing_who5": 40,
+      "format_pref": "one_on_one", "availability": ["mon_am", "wed_pm", "fri_pm"], "transport": "bus", "languages": ["es", "en"]
+    },
+    {
+      "person_id": "oa_0004", "role": "older_adult", "first_name": "Harold", "age_band": "70-74", "area": "Albany",
+      "teach_text": "High-school chemistry and math; career advice for young engineers and scientists",
+      "learn_text": "Trying AI writing tools and streaming services",
+      "generativity_text": "I mentored dozens of students and miss passing on what I learned in industry",
+      "interests_text": "chess, science news, hiking, jazz",
+      "motives": {"understanding": 0.7, "social": 0.4, "values": 0.8, "career": 0.0, "protective": 0.2, "enhancement": 0.5},
+      "generativity": 0.7, "style": {"extraversion": 0.45, "openness": 0.85},
+      "loneliness": {"ucla3": 4, "djg_emotional": 1, "djg_social": 1}, "network_lsns6": 18, "wellbeing_who5": 72,
+      "format_pref": "one_on_one", "availability": ["tue_pm", "thu_pm", "fri_am"], "transport": "drives", "languages": ["en"]
+    },
+    {
+      "person_id": "oa_0005", "role": "older_adult", "first_name": "Dorothy", "age_band": "80-84", "area": "Albany",
+      "teach_text": "Knitting, quilting and sewing by hand",
+      "learn_text": "Using a tablet to read the news and video call my sister",
+      "generativity_text": "Nobody knits anymore and I have patterns from the 1950s",
+      "interests_text": "crafts, mystery novels, birdwatching",
+      "motives": {"understanding": 0.3, "social": 0.7, "values": 0.7, "career": 0.0, "protective": 0.4, "enhancement": 0.4},
+      "generativity": 0.7, "style": {"extraversion": 0.3, "openness": 0.5},
+      "loneliness": {"ucla3": 6, "djg_emotional": 2, "djg_social": 1}, "network_lsns6": 12, "wellbeing_who5": 56,
+      "format_pref": "group", "availability": ["mon_am", "wed_am", "fri_am"], "transport": "bus", "languages": ["en"]
+    },
+    {
+      "person_id": "oa_0006", "role": "older_adult", "first_name": "Wei", "age_band": "75-79", "area": "Albany",
+      "teach_text": "Chinese calligraphy, dumpling making and Mandarin conversation",
+      "learn_text": "Using a smartphone to call family overseas",
+      "generativity_text": "I want to pass on calligraphy before my hands get too stiff",
+      "interests_text": "tai chi, calligraphy, cooking, gardening",
+      "motives": {"understanding": 0.4, "social": 0.8, "values": 0.8, "career": 0.0, "protective": 0.4, "enhancement": 0.3},
+      "generativity": 0.8, "style": {"extraversion": 0.4, "openness": 0.6},
+      "loneliness": {"ucla3": 8, "djg_emotional": 2, "djg_social": 3}, "network_lsns6": 6, "wellbeing_who5": 24,
+      "format_pref": "either", "availability": ["tue_pm", "thu_pm", "sat_pm"], "transport": "bus", "languages": ["zh"]
+    },
+    {
+      "person_id": "oa_0007", "role": "older_adult", "first_name": "Frank", "age_band": "65-69", "area": "Saratoga Springs",
+      "teach_text": "Local history of the Capital Region, guitar and organizing community events",
+      "learn_text": "Digital photography and editing photos",
+      "generativity_text": "",
+      "interests_text": "music, local history, volunteering, baseball",
+      "motives": {"understanding": 0.5, "social": 0.5, "values": 0.8, "career": 0.0, "protective": 0.1, "enhancement": 0.7},
+      "generativity": 0.5, "style": {"extraversion": 0.8, "openness": 0.7},
+      "loneliness": {"ucla3": 3, "djg_emotional": 0, "djg_social": 0}, "network_lsns6": 22, "wellbeing_who5": 80,
+      "format_pref": "group", "availability": ["sat_am", "sun_pm", "wed_eve"], "transport": "drives", "languages": ["en"]
+    },
+    {
+      "person_id": "st_0001", "role": "student", "first_name": "Priya", "age_band": "18-21", "area": "Albany",
+      "teach_text": "Setting up phones and apps; video calling and sharing photos",
+      "learn_text": "Cooking real meals and baking on a budget",
+      "interests_text": "baking, gardening, k-dramas, yoga",
+      "motives": {"understanding": 0.7, "social": 0.8, "values": 0.5, "career": 0.3, "protective": 0.5, "enhancement": 0.5},
+      "generativity": 0.0, "style": {"extraversion": 0.5, "openness": 0.7},
+      "loneliness": {"ucla3": 7}, "network_lsns6": 10, "wellbeing_who5": 44,
+      "format_pref": "one_on_one", "availability": ["tue_pm", "sat_am", "sun_pm"], "transport": "walk", "languages": ["en", "hi"]
+    },
+    {
+      "person_id": "st_0002", "role": "student", "first_name": "Diego", "age_band": "22-25", "area": "Troy",
+      "teach_text": "Spanish tutoring; video editing",
+      "learn_text": "Local history and American English idioms",
+      "interests_text": "soccer, film, music, history",
+      "motives": {"understanding": 0.8, "social": 0.7, "values": 0.4, "career": 0.4, "protective": 0.4, "enhancement": 0.4},
+      "generativity": 0.0, "style": {"extraversion": 0.7, "openness": 0.8},
+      "loneliness": {"ucla3": 6}, "network_lsns6": 12, "wellbeing_who5": 50,
+      "format_pref": "group", "availability": ["wed_eve", "sat_am", "sun_pm"], "transport": "bus", "languages": ["es", "en"]
+    },
+    {
+      "person_id": "st_0003", "role": "student", "first_name": "Aisha", "age_band": "18-21", "area": "Schenectady",
+      "teach_text": "Setting up health apps, patient portals and telehealth video visits",
+      "learn_text": "Hearing life stories, family cooking traditions and patient communication",
+      "interests_text": "cooking, music, volunteering, dancing",
+      "motives": {"understanding": 0.7, "social": 0.6, "values": 0.6, "career": 0.8, "protective": 0.3, "enhancement": 0.5},
+      "generativity": 0.0, "style": {"extraversion": 0.6, "openness": 0.7},
+      "loneliness": {"ucla3": 5}, "network_lsns6": 15, "wellbeing_who5": 58,
+      "format_pref": "one_on_one", "availability": ["mon_am", "wed_pm", "thu_pm"], "transport": "bus", "languages": ["en", "es"]
+    },
+    {
+      "person_id": "st_0004", "role": "student", "first_name": "Ben", "age_band": "18-21", "area": "Troy",
+      "teach_text": "Smartphone basics, online forms and staying safe with online banking",
+      "learn_text": "Small-engine repair and woodworking",
+      "interests_text": "old cars, video games, hiking, woodworking",
+      "motives": {"understanding": 0.8, "social": 0.4, "values": 0.5, "career": 0.6, "protective": 0.2, "enhancement": 0.4},
+      "generativity": 0.0, "style": {"extraversion": 0.4, "openness": 0.6},
+      "loneliness": {"ucla3": 4}, "network_lsns6": 16, "wellbeing_who5": 64,
+      "format_pref": "group", "availability": ["mon_pm", "sat_am", "thu_pm"], "transport": "drives", "languages": ["en"]
+    },
+    {
+      "person_id": "st_0005", "role": "student", "first_name": "Mei", "age_band": "26-29", "area": "Albany",
+      "teach_text": "Research and writing skills; showing people how to use AI tools and streaming apps",
+      "learn_text": "Career advice from an experienced engineer or scientist",
+      "interests_text": "chess, science podcasts, hiking, cooking",
+      "motives": {"understanding": 0.6, "social": 0.4, "values": 0.6, "career": 0.9, "protective": 0.3, "enhancement": 0.4},
+      "generativity": 0.0, "style": {"extraversion": 0.4, "openness": 0.8},
+      "loneliness": {"ucla3": 6}, "network_lsns6": 11, "wellbeing_who5": 52,
+      "format_pref": "one_on_one", "availability": ["tue_pm", "thu_pm", "sun_pm"], "transport": "bus", "languages": ["en", "zh"]
+    },
+    {
+      "person_id": "st_0006", "role": "student", "first_name": "Jake", "age_band": "18-21", "area": "Albany",
+      "teach_text": "Tablets, e-readers and video calls",
+      "learn_text": "Knitting and sewing",
+      "interests_text": "crafts, reading, board games",
+      "motives": {"understanding": 0.6, "social": 0.7, "values": 0.5, "career": 0.2, "protective": 0.3, "enhancement": 0.4},
+      "generativity": 0.0, "style": {"extraversion": 0.4, "openness": 0.6},
+      "loneliness": {"ucla3": 6}, "network_lsns6": 13, "wellbeing_who5": 55,
+      "format_pref": "group", "availability": ["mon_eve", "wed_eve", "fri_eve"], "transport": "walk", "languages": ["en"]
+    },
+    {
+      "person_id": "st_0007", "role": "student", "first_name": "Liam", "age_band": "18-21", "area": "Albany",
+      "teach_text": "Smartphone setup and international calling apps",
+      "learn_text": "Chinese calligraphy and dumpling making",
+      "interests_text": "tai chi, art, cooking",
+      "motives": {"understanding": 0.8, "social": 0.6, "values": 0.4, "career": 0.3, "protective": 0.2, "enhancement": 0.4},
+      "generativity": 0.0, "style": {"extraversion": 0.4, "openness": 0.8},
+      "loneliness": {"ucla3": 5}, "network_lsns6": 14, "wellbeing_who5": 60,
+      "format_pref": "either", "availability": ["tue_pm", "thu_pm"], "transport": "walk", "languages": ["en"]
+    },
+    {
+      "person_id": "st_0008", "role": "student", "first_name": "Sam", "age_band": "18-21", "area": "Troy",
+      "teach_text": "Competitive gaming strategy and building custom PCs",
+      "learn_text": "Woodworking and fixing engines",
+      "interests_text": "esports, anime, energy drinks",
+      "motives": {"understanding": 0.6, "social": 0.3, "values": 0.2, "career": 0.4, "protective": 0.2, "enhancement": 0.6},
+      "generativity": 0.0, "style": {"extraversion": 0.9, "openness": 0.4},
+      "loneliness": {"ucla3": 4}, "network_lsns6": 14, "wellbeing_who5": 62,
+      "format_pref": "group", "availability": ["mon_pm", "sat_am"], "transport": "drives", "languages": ["en"]
+    }
+  ],
+  "planted_pairs": {
+    "strong": [
+      {"older": "oa_0001", "student": "st_0001", "why": "baking <-> video calls"},
+      {"older": "oa_0002", "student": "st_0004", "why": "engines <-> phone banking"},
+      {"older": "oa_0003", "student": "st_0003", "why": "cooking and Spanish <-> patient portals"},
+      {"older": "oa_0004", "student": "st_0005", "why": "career advice <-> AI tools"}
+    ],
+    "traps": [
+      {"older": "oa_0005", "student": "st_0006", "why": "great skill fit but no shared availability", "expect": "filtered"},
+      {"older": "oa_0006", "student": "st_0007", "why": "great skill fit but no shared language", "expect": "filtered"},
+      {"older": "oa_0002", "student": "st_0008", "why": "one-sided: Sam wants Walter's skills but offers nothing he wants", "expect": "below_strong"}
+    ]
+  }
+}
